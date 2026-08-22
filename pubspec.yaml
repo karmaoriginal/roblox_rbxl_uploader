@@ -1,0 +1,19 @@
+name: roblox_rbxl_uploader
+description: A Flutter app to upload .rbxl files to Roblox using Open Cloud API.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.1
+  file_picker: ^8.0.5
+  flutter_secure_storage: ^9.2.2
+  path_provider: ^2.1.3
+  dio: ^5.4.3+1
+
+flutter:
+  uses-material-design: true
