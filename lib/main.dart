@@ -132,8 +132,8 @@ class _UploadScreenState extends State<UploadScreen> {
 
   String _formatFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '\${(bytes / 1024).toStringAsFixed(1)} KB';
-    return '\${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
   }
 
   Future<void> _uploadToRoblox() async {
@@ -194,14 +194,14 @@ class _UploadScreenState extends State<UploadScreen> {
         );
       } else {
         _showSnackBar(
-          'Error del servidor: \${response.statusCode}',
+          'Error del servidor: ${response.statusCode}',
           isError: true,
         );
       }
     } on DioException catch (e) {
       String message = 'Error de conexión';
       if (e.response != null) {
-        message = 'Error \${e.response?.statusCode}: \${e.response?.data ?? e.message}';
+        message = 'Error ${e.response?.statusCode}: ${e.response?.data ?? e.message}';
       } else {
         message = e.message ?? 'Error desconocido';
       }
@@ -467,7 +467,7 @@ class _UploadScreenState extends State<UploadScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '\${(_uploadProgress * 100).toStringAsFixed(1)}% completado',
+                            '${(_uploadProgress * 100).toStringAsFixed(1)}% completado',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,
