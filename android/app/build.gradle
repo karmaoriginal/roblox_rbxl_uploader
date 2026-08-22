@@ -26,14 +26,22 @@ android {
         versionName = flutter.versionName
     }
 
-    buildTypes {
+        buildTypes {
         release {
             signingConfig = signingConfigs.debug
             minifyEnabled false
             shrinkResources false
         }
     }
-}
+
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
 
 flutter {
     source = "../.."
