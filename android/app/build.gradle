@@ -26,7 +26,7 @@ android {
         versionName = flutter.versionName
     }
 
-        buildTypes {
+    buildTypes {
         release {
             signingConfig = signingConfigs.debug
             minifyEnabled false
@@ -42,6 +42,7 @@ android {
             keyPassword "android"
         }
     }
+}
 
 flutter {
     source = "../.."
