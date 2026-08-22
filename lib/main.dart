@@ -106,18 +106,22 @@ class _UploadScreenState extends State<UploadScreen> {
   Future<void> _pickFile() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['rbxl'],
+        type: FileType.any,
         allowMultiple: false,
         withData: false,
       );
 
       if (result != null && result.files.single.path != null) {
+        final name = result.files.single.name;
+        if (!name.toLowerCase().endsWith('.rbxl')) {
+          _showSnackBar('El archivo debe tener extensión .rbxl', isError: true);
+          return;
+        }
         final file = File(result.files.single.path!);
         final stat = await file.stat();
         setState(() {
           _selectedFilePath = result.files.single.path;
-          _selectedFileName = result.files.single.name;
+          _selectedFileName = name;
           _selectedFileSize = stat.size;
         });
       }
