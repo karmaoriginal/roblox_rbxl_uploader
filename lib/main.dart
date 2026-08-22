@@ -122,12 +122,12 @@ class _UploadScreenState extends State<UploadScreen> {
         });
       }
     } catch (e) {
-      _showSnackBar('Error al seleccionar archivo: \$e', isError: true);
+      _showSnackBar('Error al seleccionar archivo: $e', isError: true);
     }
   }
 
   String _formatFileSize(int bytes) {
-    if (bytes < 1024) return '\$bytes B';
+    if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '\${(bytes / 1024).toStringAsFixed(1)} KB';
     return '\${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
   }
@@ -160,7 +160,7 @@ class _UploadScreenState extends State<UploadScreen> {
       final file = File(_selectedFilePath!);
       final fileBytes = await file.readAsBytes();
 
-      final url = 'https://apis.roblox.com/v1/places/\$placeId/versions?versionType=Saved';
+      final url = 'https://apis.roblox.com/v1/places/$placeId/versions?versionType=Saved';
 
       final response = await _dio.post(
         url,
@@ -185,7 +185,7 @@ class _UploadScreenState extends State<UploadScreen> {
       if (response.statusCode == 200) {
         final versionNumber = response.data['versionNumber'];
         _showSnackBar(
-          '¡Subida exitosa! Nueva versión: #\$versionNumber',
+          '¡Subida exitosa! Nueva versión: #$versionNumber',
           isError: false,
         );
       } else {
@@ -203,7 +203,7 @@ class _UploadScreenState extends State<UploadScreen> {
       }
       _showSnackBar(message, isError: true);
     } catch (e) {
-      _showSnackBar('Error inesperado: \$e', isError: true);
+      _showSnackBar('Error inesperado: $e', isError: true);
     } finally {
       setState(() {
         _isUploading = false;
