@@ -71,6 +71,7 @@ class _UploadScreenState extends State<UploadScreen> {
   final _storage = const FlutterSecureStorage();
   final _apiKeyController = TextEditingController();
   final _placeIdController = TextEditingController();
+  final _universeIdController = TextEditingController();
   final _dio = Dio();
 
   bool _obscureApiKey = true;
@@ -90,17 +91,22 @@ class _UploadScreenState extends State<UploadScreen> {
   Future<void> _loadSavedCredentials() async {
     final apiKey = await _storage.read(key: 'roblox_api_key');
     final placeId = await _storage.read(key: 'roblox_place_id');
+    final universeId = await _storage.read(key: 'roblox_universe_id');
     if (apiKey != null) {
       _apiKeyController.text = apiKey;
     }
     if (placeId != null) {
       _placeIdController.text = placeId;
     }
+    if (universeId != null) {
+      _universeIdController.text = universeId;
+    }
   }
 
   Future<void> _saveCredentials() async {
     await _storage.write(key: 'roblox_api_key', value: _apiKeyController.text.trim());
     await _storage.write(key: 'roblox_place_id', value: _placeIdController.text.trim());
+    await _storage.write(key: 'roblox_universe_id', value: _universeIdController.text.trim());
   }
 
   Future<void> _pickFile() async {
@@ -139,6 +145,7 @@ class _UploadScreenState extends State<UploadScreen> {
   Future<void> _uploadToRoblox() async {
     final apiKey = _apiKeyController.text.trim();
     final placeId = _placeIdController.text.trim();
+    final universeId = _universeIdController.text.trim();
 
     if (apiKey.isEmpty) {
       _showSnackBar('Ingresa tu x-api-key de Roblox', isError: true);
@@ -146,6 +153,10 @@ class _UploadScreenState extends State<UploadScreen> {
     }
     if (placeId.isEmpty) {
       _showSnackBar('Ingresa el Place ID', isError: true);
+      return;
+    }
+    if (universeId.isEmpty) {
+      _showSnackBar('Ingresa el Universe ID', isError: true);
       return;
     }
     if (_selectedFilePath == null) {
@@ -164,7 +175,7 @@ class _UploadScreenState extends State<UploadScreen> {
       final file = File(_selectedFilePath!);
       final fileBytes = await file.readAsBytes();
 
-      final url = 'https://apis.roblox.com/v1/places/$placeId/versions?versionType=Saved';
+      final url = 'https://apis.roblox.com/universes/v1/$universeId/places/$placeId/versions?versionType=Published';
 
       final response = await _dio.post(
         url,
@@ -232,6 +243,7 @@ class _UploadScreenState extends State<UploadScreen> {
   void dispose() {
     _apiKeyController.dispose();
     _placeIdController.dispose();
+    _universeIdController.dispose();
     _dio.close();
     super.dispose();
   }
@@ -353,6 +365,18 @@ class _UploadScreenState extends State<UploadScreen> {
                             labelText: 'Place ID',
                             hintText: 'Ej: 123456789',
                             prefixIcon: Icon(Icons.place_rounded),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Universe ID
+                        TextField(
+                          controller: _universeIdController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Universe ID',
+                            hintText: 'Ej: 987654321',
+                            prefixIcon: Icon(Icons.public_rounded),
                           ),
                         ),
                         const SizedBox(height: 20),
