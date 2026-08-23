@@ -20,11 +20,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart' as vm;
 
-/// Modelo mínimo de una Part de Roblox (tipo Block).
+/// Modelo mínimo de una instancia de Roblox (Part, SpawnLocation, etc.)
 class RbxPart {
   RbxPart({
     required this.id,
     required this.name,
+    required this.className,
     required this.position,
     required this.size,
     required this.color,
@@ -32,6 +33,7 @@ class RbxPart {
 
   final String id;
   final String name;
+  final String className; // 'Part', 'SpawnLocation', etc.
   vm.Vector3 position;
   final vm.Vector3 size;
   final Color color;
@@ -137,27 +139,43 @@ class _RbxlViewportState extends State<RbxlViewport> {
             ),
           ),
         ),
-        _buildSelector(),
+        _buildExplorer(),
         if (_selectedPart != null) _buildTransformControls(),
       ],
     );
   }
 
-  Widget _buildSelector() {
-    return SizedBox(
-      height: 48,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 4),
+  IconData _iconFor(String className) {
+    switch (className) {
+      case 'SpawnLocation':
+        return Icons.flag_rounded;
+      default:
+        return Icons.crop_square_rounded;
+    }
+  }
+
+  Widget _buildExplorer() {
+    return Container(
+      constraints: const BoxConstraints(maxHeight: 200),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: Colors.grey.shade800)),
+      ),
+      child: ExpansionTile(
+        initiallyExpanded: true,
+        leading: const Icon(Icons.folder_rounded, size: 20),
+        title: const Text('Workspace'),
+        childrenPadding: const EdgeInsets.only(left: 8),
         children: widget.parts.map((part) {
           final selected = part.id == _selectedId;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ChoiceChip(
-              label: Text(part.name),
-              selected: selected,
-              onSelected: (_) => setState(() => _selectedId = part.id),
-            ),
+          return ListTile(
+            dense: true,
+            selected: selected,
+            selectedTileColor: Colors.blue.withValues(alpha: 0.15),
+            leading: Icon(_iconFor(part.className), size: 18),
+            title: Text(part.name),
+            subtitle: Text(part.className,
+                style: Theme.of(context).textTheme.bodySmall),
+            onTap: () => setState(() => _selectedId = part.id),
           );
         }).toList(),
       ),
@@ -198,21 +216,23 @@ class _RbxlViewportState extends State<RbxlViewport> {
 }
 
 /// Ejemplo de datos iniciales, tipo un place nuevo de Roblox
-/// (un Baseplate grande + una Part chica encima). Usalo para probar:
-///   RbxlViewport(parts: demoParts)
+/// (Baseplate + SpawnLocation, como trae un place recién creado). Usalo
+/// para probar: RbxlViewport(parts: demoParts)
 final List<RbxPart> demoParts = [
   RbxPart(
     id: 'baseplate',
     name: 'Baseplate',
+    className: 'Part',
     position: vm.Vector3(0, 0, 0),
     size: vm.Vector3(20, 1, 20),
     color: const Color(0xFF3A7D3A),
   ),
   RbxPart(
-    id: 'part1',
-    name: 'Part',
-    position: vm.Vector3(0, 2, 0),
-    size: vm.Vector3(2, 2, 2),
-    color: const Color(0xFFB0AFA8),
+    id: 'spawn1',
+    name: 'SpawnLocation',
+    className: 'SpawnLocation',
+    position: vm.Vector3(0, 1, 0),
+    size: vm.Vector3(6, 0.2, 6),
+    color: const Color(0xFF00A736),
   ),
 ];
