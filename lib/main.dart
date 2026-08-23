@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
+import 'viewer/editor_screen.dart';
 
 void main() {
   runApp(const RobloxUploaderApp());
@@ -314,7 +315,27 @@ class _UploadScreenState extends State<UploadScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 16),
+
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const EditorScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.view_in_ar_rounded),
+                    label: const Text('Abrir editor 3D (beta)'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      side: const BorderSide(color: Color(0xFF00A2FF)),
+                      foregroundColor: const Color(0xFF00A2FF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
 
                   // Form Card
                   Container(
